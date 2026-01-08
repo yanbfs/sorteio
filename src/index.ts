@@ -1,14 +1,20 @@
-import loadParticipants from "./functions/loadParticipant";
-import lastRemaining from "./functions/lastRemaining";
-import terminal from "./ui/terminal";
+import loadParticipants from "./functions/loadParticipant"
+import drawWithProgress from "./functions/drawWithProgress"
+import terminal from "./ui/terminal"
 
-const participants = loadParticipants('src/data/data.csv')
-const unlucky = lastRemaining(participants)
+async function main() {
+  const participants = loadParticipants("src/data/data.csv")
 
-terminal.clear()
+  if (participants.length === 0) {
+    terminal.red("❌ Nenhum participante encontrado.\n")
+    return
+  }
 
-terminal.white('\n\nO').brightRed(' AZARADO')
-terminal.bold.brightGreen (' MAIS SORTUDO').white(' é: \n')
-terminal.bold.brightYellow(unlucky.toString())
+  const winner = await drawWithProgress(participants)
 
-console.log()
+  terminal.bold.brightGreen("🎉 O AZARADO MAIS SORTUDO É:\n")
+  terminal.bold.brightYellow(winner.toString())
+  console.log()
+}
+
+main()
